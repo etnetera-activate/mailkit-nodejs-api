@@ -2,11 +2,11 @@
 
 class Mailkit{
     constructor(){
-        this.version = "0.1.0"
+        this.version = "0.1.1"
     }
 
     getVersion(){
-        return "Mailkik ["+this.version+"]"
+        return "Mailkit ["+this.version+"]"
     }
 }
 
