@@ -11,6 +11,21 @@ class Mailkit{
         this.xmlrpcClient = xmlrpc.createSecureClient({ host: "api.mailkit.eu", port: 443, path: '/rpc.fcgi'})
     }
 
+    // returns a new object with the values at each key mapped using mapFn(value)
+    objectMap(object, mapFn) {
+        return Object.keys(object).reduce(function(result, key) {
+            result[key] = mapFn(object[key])
+            return result
+        }, {})
+    }
+
+    /* na vstupu očekává pole struktur name/value a vrátí stejnou strukturu, kde name zůstává stejné a value se převede do Base64 */
+    contentToBase64(content) {
+        return this.objectMap(content, function(value) {
+            return value ? Buffer.from(value).toString("base64") : "";
+        })
+    }
+    
     /*
     * Odeslani emailu na jednoho uzivatele. Predpoklada jako parametr strukturu dle dokumentace na:
     * https://www.mailkit.eu/cz/napoveda-pomoc/dokumentace/api/dorucovani-kampane/mailkitsendmail/
@@ -21,12 +36,12 @@ class Mailkit{
             let params = []
             params.push(this.clientId)
             params.push(this.clientMD5)
-            params.push(par.mailinglist_id)  //kde vezmeme?
-            params.push(par.campaign_id)     //kde vezmeme?
+            params.push(par.mailinglist_id)  
+            params.push(par.campaign_id)     
             params.push({
                 "send_to" : par.send_to,
                 "subject" : par.subject,
-                "content" : {}, // FIXME: tady mohou byt promene. Asi název akce??
+                "content" : this.contentToBase64(par.content) 
             })
             params.push({
                 "company" : par.company ? Buffer.from(par.company).toString("base64") : "",
