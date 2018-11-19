@@ -11,9 +11,9 @@ This is implementation of API for Mailkit.cz emailing tool. See https://www.mail
 ```js
 import Mailkit from 'mailkit-nodejs-api';
 
-const harvest = new Mailkit({
- 
-});
+const harvest = new Mailkit(clientId, clientMD5);
+
+
 
 ```
 
